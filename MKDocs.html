@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevOps Documentation Guide · MkDocs + GitHub Pages</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:    #0a0c12;
+  --ink2:   #0f1218;
+  --ink3:   #141a24;
+  --ink4:   #1c2332;
+  --line:   rgba(255,255,255,0.06);
+  --line2:  rgba(255,255,255,0.12);
+  --t1:     #eef2ff;
+  --t2:     #8896b3;
+  --t3:     #4a5878;
+
+  --blue:   #4f8ef7;
+  --blue2:  #2563eb;
+  --cyan:   #22d3ee;
+  --green:  #34d399;
+  --amber:  #fbbf24;
+  --orange: #fb923c;
+  --purple: #a78bfa;
+  --rose:   #fb7185;
+  --teal:   #2dd4bf;
+  --lime:   #86efac;
+
+  --blue-bg:   rgba(79,142,247,0.08);
+  --cyan-bg:   rgba(34,211,238,0.08);
+  --green-bg:  rgba(52,211,153,0.08);
+  --amber-bg:  rgba(251,191,36,0.08);
+  --purple-bg: rgba(167,139,250,0.08);
+  --rose-bg:   rgba(251,113,133,0.08);
+
+  --sans: 'DM Sans', sans-serif;
+  --head: 'Syne', sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+
+  --rad: 14px;
+  --rad-lg: 20px;
+  --shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  font-family:var(--sans);
+  color:var(--t1);
+  line-height:1.6;
+  font-size:14px;
+}
+
+/* ── NOISE TEXTURE OVERLAY ── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:0;opacity:0.4;
+}
+
+/* ── ANIMATED GRADIENT BG ── */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 15% 10%, rgba(79,142,247,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 85% 80%, rgba(167,139,250,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 50% 50%, rgba(34,211,238,0.03) 0%, transparent 70%);
+  pointer-events:none;z-index:0;
+}
+
+.wrap{position:relative;z-index:1;max-width:1260px;margin:0 auto;padding:32px 24px 100px}
+
+/* ── HERO ── */
+.hero{
+  padding:56px 0 40px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:32px;
+  align-items:start;
+  border-bottom:1px solid var(--line);
+  margin-bottom:36px;
+}
+.hero-left{}
+.role-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:5px 14px;border-radius:40px;
+  background:var(--blue-bg);border:1px solid rgba(79,142,247,0.3);
+  font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--blue);margin-bottom:16px;
+}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 6px var(--green);animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+.hero h1{
+  font-family:var(--head);
+  font-size:clamp(1.9rem,3.5vw,3rem);
+  font-weight:800;
+  line-height:1.1;
+  letter-spacing:-0.03em;
+  background:linear-gradient(135deg,#fff 0%,#93c5fd 45%,#c4b5fd 75%,#6ee7b7 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  background-size:200% 200%;
+  animation:hgrad 8s ease-in-out infinite;
+}
+@keyframes hgrad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero-sub{color:var(--t2);font-size:15px;margin-top:10px;max-width:600px;font-weight:400;}
+
+.hero-stats{
+  display:flex;flex-direction:column;gap:8px;
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--rad-lg);padding:20px;min-width:200px;
+}
+.hs-row{display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:12px;}
+.hs-label{color:var(--t3);font-weight:500;}
+.hs-val{font-family:var(--mono);font-weight:500;font-size:11px;}
+.hs-val.g{color:var(--green)}.hs-val.b{color:var(--blue)}.hs-val.a{color:var(--amber)}.hs-val.p{color:var(--purple)}
+
+/* ── TAG ROW ── */
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px;}
+.tag{padding:4px 13px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:0.5px;border:1px solid;}
+.tag.bl{color:var(--blue);border-color:rgba(79,142,247,0.35);background:var(--blue-bg);}
+.tag.cy{color:var(--cyan);border-color:rgba(34,211,238,0.35);background:var(--cyan-bg);}
+.tag.gr{color:var(--green);border-color:rgba(52,211,153,0.35);background:var(--green-bg);}
+.tag.am{color:var(--amber);border-color:rgba(251,191,36,0.35);background:var(--amber-bg);}
+.tag.pu{color:var(--purple);border-color:rgba(167,139,250,0.35);background:var(--purple-bg);}
+.tag.ro{color:var(--rose);border-color:rgba(251,113,133,0.35);background:var(--rose-bg);}
+
+/* ── TABS ── */
+.tab-bar{
+  display:flex;flex-wrap:wrap;gap:4px;
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--rad-lg);padding:5px;margin-bottom:28px;
+}
+.tab{
+  flex:1;min-width:90px;
+  padding:9px 14px;
+  border:none;background:transparent;
+  font-family:var(--sans);font-size:12px;font-weight:600;
+  color:var(--t3);border-radius:12px;cursor:pointer;
+  transition:all 0.2s;white-space:nowrap;
+  letter-spacing:0.2px;
+}
+.tab:hover{color:var(--t1);background:rgba(255,255,255,0.04);}
+.tab.active{
+  background:linear-gradient(135deg,rgba(79,142,247,0.2),rgba(167,139,250,0.15));
+  color:#fff;
+  border:1px solid rgba(79,142,247,0.35);
+  box-shadow:0 0 18px rgba(79,142,247,0.15);
+}
+
+/* ── SECTIONS ── */
+.sec{display:none;}
+.sec.active{display:block;animation:secIn 0.35s cubic-bezier(0.22,1,0.36,1) both;}
+@keyframes secIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SECTION HEADER ── */
+.sec-hdr{
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:24px;padding-bottom:16px;
+  border-bottom:1px solid var(--line);
+}
+.sec-icon{
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.si-bl{background:var(--blue-bg);border:1px solid rgba(79,142,247,0.35);}
+.si-cy{background:var(--cyan-bg);border:1px solid rgba(34,211,238,0.35);}
+.si-gr{background:var(--green-bg);border:1px solid rgba(52,211,153,0.35);}
+.si-am{background:var(--amber-bg);border:1px solid rgba(251,191,36,0.35);}
+.si-pu{background:var(--purple-bg);border:1px solid rgba(167,139,250,0.35);}
+.si-ro{background:var(--rose-bg);border:1px solid rgba(251,113,133,0.35);}
+
+.sec-hdr-text h2{font-family:var(--head);font-size:1.4rem;font-weight:700;letter-spacing:-0.02em;}
+.sec-hdr-text p{color:var(--t2);font-size:13px;margin-top:2px;}
+
+h3{font-family:var(--head);font-size:1rem;font-weight:700;margin:24px 0 10px;color:var(--t1);
+   display:flex;align-items:center;gap:8px;}
+h3::before{content:'';display:block;width:3px;height:14px;border-radius:2px;background:var(--blue);}
+
+/* ── TOOL CARDS ── */
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin:14px 0 24px;}
+.tool-card{
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--rad);padding:18px;
+  transition:all 0.25s;position:relative;overflow:hidden;
+  cursor:default;
+}
+.tool-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px 2px 0 0;
+}
+.tc-bl::before{background:linear-gradient(90deg,transparent,var(--blue),transparent);}
+.tc-gr::before{background:linear-gradient(90deg,transparent,var(--green),transparent);}
+.tc-am::before{background:linear-gradient(90deg,transparent,var(--amber),transparent);}
+.tc-pu::before{background:linear-gradient(90deg,transparent,var(--purple),transparent);}
+.tc-cy::before{background:linear-gradient(90deg,transparent,var(--cyan),transparent);}
+.tc-ro::before{background:linear-gradient(90deg,transparent,var(--rose),transparent);}
+.tool-card:hover{border-color:rgba(79,142,247,0.35);transform:translateY(-3px);box-shadow:var(--shadow);}
+.tc-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.tc-emoji{font-size:22px;}
+.tc-name{font-family:var(--head);font-weight:700;font-size:14px;}
+.tc-free{font-size:9px;padding:2px 8px;border-radius:20px;font-weight:700;letter-spacing:1px;
+  background:var(--green-bg);color:var(--green);border:1px solid rgba(52,211,153,0.3);}
+.tc-desc{font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:10px;}
+.tc-badges{display:flex;flex-wrap:wrap;gap:5px;}
+.tcb{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500;}
+.tcb-bl{background:var(--blue-bg);color:var(--blue);}
+.tcb-gr{background:var(--green-bg);color:var(--green);}
+.tcb-am{background:var(--amber-bg);color:var(--amber);}
+.tcb-pu{background:var(--purple-bg);color:var(--purple);}
+.tcb-cy{background:var(--cyan-bg);color:var(--cyan);}
+
+/* ── CODE BLOCKS ── */
+.code-wrap{background:#020408;border:1px solid rgba(255,255,255,0.06);border-radius:var(--rad);overflow:hidden;margin:12px 0;}
+.code-wrap:hover{border-color:rgba(79,142,247,0.3);box-shadow:0 4px 20px rgba(79,142,247,0.1);}
+.code-top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 14px;background:rgba(10,16,28,0.8);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.code-dots{display:flex;gap:5px;}
+.cd{width:10px;height:10px;border-radius:50%;}
+.cd-r{background:#ff5f57}.cd-y{background:#ffbd2e}.cd-g{background:#28ca41}
+.code-fname{font-family:var(--mono);font-size:11px;color:var(--t3);}
+.code-badge{font-size:10px;padding:2px 9px;border-radius:20px;font-weight:700;letter-spacing:0.5px;}
+.cb-py {background:rgba(251,191,36,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.25);}
+.cb-yml{background:rgba(52,211,153,0.12);color:#34d399;border:1px solid rgba(52,211,153,0.25);}
+.cb-sh {background:rgba(167,139,250,0.12);color:#a78bfa;border:1px solid rgba(167,139,250,0.25);}
+.cb-md {background:rgba(79,142,247,0.12);color:#4f8ef7;border:1px solid rgba(79,142,247,0.25);}
+.cb-tree{background:rgba(34,211,238,0.12);color:#22d3ee;border:1px solid rgba(34,211,238,0.25);}
+.cb-git{background:rgba(251,113,133,0.12);color:#fb7185;border:1px solid rgba(251,113,133,0.25);}
+pre{padding:18px 20px;font-family:var(--mono);font-size:12px;line-height:1.85;color:#7a98c8;overflow-x:auto;}
+.kw{color:#c084fc}.fn{color:#93c5fd}.str{color:#86efac}.cm{color:#334d66;font-style:italic}
+.num{color:#fbbf24}.val{color:#fb923c}.hdr{color:#7dd3fc}.cmd{color:#34d399}
+.ok{color:#4ade80}.err{color:#f87171}.hl{background:rgba(79,142,247,0.12);display:block;margin:0 -20px;padding:0 20px;}
+
+/* ── TERMINAL OUTPUT ── */
+.terminal{
+  background:#020406;border:1px solid rgba(255,255,255,0.05);
+  border-left:3px solid var(--green);border-radius:0 var(--rad) var(--rad) 0;
+  padding:14px 18px;font-family:var(--mono);font-size:11.5px;
+  line-height:1.9;color:#4ade80;margin:10px 0;
+  transition:border-left-width 0.2s;
+}
+.terminal:hover{border-left-width:5px;}
+.t-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);
+  font-weight:600;margin-bottom:8px;display:block;}
+.t-prompt::before{content:'$ ';color:var(--purple);}
+.t-out{color:#22d3ee;}
+.t-ok{color:var(--green);}
+.t-warn{color:var(--amber);}
+.t-err{color:var(--rose);}
+
+/* ── ALERTS ── */
+.alert{border-radius:12px;padding:13px 16px;margin:12px 0;font-size:13px;
+  border:1px solid;display:flex;gap:11px;align-items:flex-start;line-height:1.6;}
+.alert-ico{font-size:15px;flex-shrink:0;margin-top:1px;}
+.al-info{background:var(--blue-bg);border-color:rgba(79,142,247,0.3);color:#bfdbfe;}
+.al-warn{background:var(--amber-bg);border-color:rgba(251,191,36,0.3);color:#fde68a;}
+.al-good{background:var(--green-bg);border-color:rgba(52,211,153,0.3);color:#bbf7d0;}
+.al-danger{background:var(--rose-bg);border-color:rgba(251,113,133,0.3);color:#fecaca;}
+
+/* ── STEPS ── */
+.steps-list{margin:14px 0;}
+.step{
+  display:flex;gap:16px;padding:14px 16px;
+  border-radius:var(--rad);margin-bottom:8px;
+  border:1px solid transparent;
+  transition:all 0.25s;
+}
+.step:hover{background:rgba(79,142,247,0.04);border-color:rgba(79,142,247,0.2);transform:translateX(5px);}
+.sn{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;flex-shrink:0;
+  border:1px solid;transition:box-shadow 0.2s;
+}
+.step:hover .sn{box-shadow:0 0 12px currentColor;}
+.sn-b{color:var(--blue);border-color:var(--blue);background:var(--blue-bg);}
+.sn-g{color:var(--green);border-color:var(--green);background:var(--green-bg);}
+.sn-a{color:var(--amber);border-color:var(--amber);background:var(--amber-bg);}
+.sn-p{color:var(--purple);border-color:var(--purple);background:var(--purple-bg);}
+.sc h4{font-size:13px;font-weight:600;margin-bottom:4px;}
+.sc p{font-size:12px;color:var(--t2);}
+
+/* ── FOLDER TREE ── */
+.tree{
+  background:#020408;border:1px solid rgba(255,255,255,0.06);
+  border-radius:var(--rad);padding:20px 24px;
+  font-family:var(--mono);font-size:12.5px;line-height:2;
+  margin:12px 0;
+}
+.tree:hover{border-color:rgba(34,211,238,0.3);}
+.t-dir{color:var(--cyan);font-weight:500;}
+.t-file{color:#8badd8;}
+.t-yaml{color:var(--amber);}
+.t-md{color:var(--blue);}
+.t-py{color:var(--green);}
+.t-sh{color:var(--purple);}
+.t-dot{color:var(--rose);}
+.t-note{color:var(--t3);font-style:italic;font-size:11px;}
+.t-arrow{color:var(--t3);}
+
+/* ── TABLE ── */
+.tbl-wrap{border-radius:var(--rad);overflow:hidden;border:1px solid var(--line);margin:14px 0;}
+table{width:100%;border-collapse:collapse;}
+thead th{background:rgba(12,18,30,0.9);padding:10px 14px;text-align:left;
+  font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);}
+tbody td{padding:10px 14px;font-size:12.5px;border-bottom:1px solid rgba(255,255,255,0.03);
+  color:var(--t1);transition:background 0.15s;vertical-align:top;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:rgba(79,142,247,0.05);}
+code{font-family:var(--mono);font-size:11px;color:#93c5fd;background:rgba(79,142,247,0.1);
+  padding:2px 6px;border-radius:4px;}
+
+/* ── CALLOUT ── */
+.callout{
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--rad);padding:16px 18px;margin:14px 0;
+  position:relative;overflow:hidden;
+}
+.callout::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;}
+.callout-bl::before{background:var(--blue);}
+.callout-gr::before{background:var(--green);}
+.callout-am::before{background:var(--amber);}
+.callout-pu::before{background:var(--purple);}
+.callout-cy::before{background:var(--cyan);}
+.callout h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;}
+.callout-bl h4{color:var(--blue)}.callout-gr h4{color:var(--green)}
+.callout-am h4{color:var(--amber)}.callout-pu h4{color:var(--purple)}.callout-cy h4{color:var(--cyan)}
+.callout p,.callout li{font-size:12.5px;color:var(--t2);}
+.callout ul{padding-left:16px;margin-top:4px;}
+.callout li{padding:2px 0;}
+
+/* ── GRID LAYOUT ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+@media(max-width:700px){.two-col{grid-template-columns:1fr}.hero{grid-template-columns:1fr}.hero-stats{display:none}}
+
+/* ── COMPARISON TABLE ── */
+.compare-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin:14px 0;}
+.cmp-card{background:var(--ink3);border:1px solid var(--line);border-radius:var(--rad);padding:14px;transition:all 0.2s;}
+.cmp-card:hover{border-color:rgba(79,142,247,0.3);transform:translateY(-2px);}
+.cmp-title{font-weight:700;font-size:13px;margin-bottom:6px;}
+.cmp-stars{color:var(--amber);font-size:11px;margin-bottom:6px;}
+.cmp-list{list-style:none;font-size:11px;color:var(--t2);}
+.cmp-list li{padding:2px 0;padding-left:12px;position:relative;}
+.cmp-list li::before{content:'✓';position:absolute;left:0;color:var(--green);font-size:10px;}
+.cmp-list li.no::before{content:'✗';color:var(--rose);}
+
+/* ── WORKFLOW DIAGRAM ── */
+.workflow{
+  display:flex;align-items:center;flex-wrap:wrap;gap:0;
+  background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--rad-lg);padding:20px;margin:14px 0;
+  overflow-x:auto;
+}
+.wf-node{
+  background:var(--ink4);border:1px solid var(--line2);border-radius:10px;
+  padding:10px 14px;text-align:center;min-width:100px;flex-shrink:0;
+  transition:all 0.2s;cursor:default;
+}
+.wf-node:hover{border-color:rgba(79,142,247,0.4);transform:translateY(-3px);}
+.wf-emoji{font-size:20px;display:block;margin-bottom:4px;}
+.wf-label{font-size:11px;font-weight:600;color:var(--t1);}
+.wf-sub{font-size:10px;color:var(--t3);font-family:var(--mono);}
+.wf-arrow{font-size:20px;color:var(--t3);padding:0 6px;animation:wfPulse 2s infinite;}
+@keyframes wfPulse{0%,100%{color:var(--t3)}50%{color:var(--blue);text-shadow:0 0 6px var(--blue)}}
+
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--ink)}
+::-webkit-scrollbar-thumb{background:rgba(79,142,247,0.3);border-radius:3px}
+::selection{background:rgba(79,142,247,0.4);color:#fff}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ══════ HERO ══════ -->
+<div class="hero">
+  <div class="hero-left">
+    <div class="role-chip"><div class="pulse"></div>DevOps Engineer · XYZ Organization</div>
+    <h1>Documentation<br>Mastery Guide</h1>
+    <p class="hero-sub">Free tools, MkDocs setup, folder structure & GitHub Pages hosting — complete step-by-step for DevOps teams.</p>
+  </div>
+  <div class="hero-stats">
+    <div class="hs-row"><span class="hs-label">Framework</span><span class="hs-val b">MkDocs + Material</span></div>
+    <div class="hs-row"><span class="hs-label">Hosting</span><span class="hs-val g">GitHub Pages FREE</span></div>
+    <div class="hs-row"><span class="hs-label">Deploy</span><span class="hs-val a">GitHub Actions CI</span></div>
+    <div class="hs-row"><span class="hs-label">Theme</span><span class="hs-val p">Material Design</span></div>
+    <div class="hs-row"><span class="hs-label">Cost</span><span class="hs-val g">$0.00 / month</span></div>
+  </div>
+</div>
+
+<!-- ══════ TAGS ══════ -->
+<div class="tags">
+  <span class="tag bl">MkDocs</span>
+  <span class="tag gr">GitHub Pages</span>
+  <span class="tag am">GitHub Actions</span>
+  <span class="tag cy">Material Theme</span>
+  <span class="tag pu">Python</span>
+  <span class="tag ro">DevOps Docs</span>
+  <span class="tag bl">Markdown</span>
+  <span class="tag gr">100% Free</span>
+</div>
+
+<!-- ══════ TABS ══════ -->
+<div class="tab-bar">
+  <button class="tab active" onclick="show('tools')">🧰 Free Tools</button>
+  <button class="tab" onclick="show('why')">🎯 Why MkDocs</button>
+  <button class="tab" onclick="show('install')">⚙️ Installation</button>
+  <button class="tab" onclick="show('structure')">📁 Folder Structure</button>
+  <button class="tab" onclick="show('config')">🔧 Configuration</button>
+  <button class="tab" onclick="show('writing')">✍️ Writing Docs</button>
+  <button class="tab" onclick="show('github')">🚀 GitHub Pages</button>
+  <button class="tab" onclick="show('cicd')">⚡ CI/CD Pipeline</button>
+  <button class="tab" onclick="show('tips')">💡 Pro Tips</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 1: FREE TOOLS
+══════════════════════════════════════════ -->
+<div id="tools" class="sec active">
+  <div class="sec-hdr">
+    <div class="sec-icon si-bl">🧰</div>
+    <div class="sec-hdr-text">
+      <h2>Free Documentation Tools for DevOps Engineers</h2>
+      <p>Tested, production-grade tools used by real DevOps teams — all free tier or open source</p>
+    </div>
+  </div>
+
+  <h3>⭐ Tier 1 — Recommended (Git-based, Version-controlled)</h3>
+  <div class="tool-grid">
+    <div class="tool-card tc-bl">
+      <div class="tc-top"><span class="tc-emoji">📘</span><div><div class="tc-name">MkDocs + Material</div><span class="tc-free">100% FREE</span></div></div>
+      <div class="tc-desc">Static site generator for docs. Material theme gives it a stunning, searchable, responsive UI. Docs live in your Git repo as Markdown. Best-in-class for DevOps teams.</div>
+      <div class="tc-badges">
+        <span class="tcb tcb-bl">Git-native</span>
+        <span class="tcb tcb-gr">GitHub Pages</span>
+        <span class="tcb tcb-am">Markdown</span>
+        <span class="tcb tcb-pu">Python</span>
+      </div>
+    </div>
+    <div class="tool-card tc-gr">
+      <div class="tc-top"><span class="tc-emoji">🦕</span><div><div class="tc-name">Docusaurus</div><span class="tc-free">100% FREE</span></div></div>
+      <div class="tc-desc">Facebook's doc framework. React-based, excellent for versioned docs. Heavier than MkDocs but more powerful for large teams with multiple product versions.</div>
+      <div class="tc-badges">
+        <span class="tcb tcb-bl">React</span>
+        <span class="tcb tcb-gr">Versioned</span>
+        <span class="tcb tcb-am">i18n</span>
+      </div>
+    </div>
+    <div class="tool-card tc-pu">
+      <div class="tc-top"><span class="tc-emoji">📓</span><div><div class="tc-name">Obsidian</div><span class="tc-free">FREE Personal</span></div></div>
+      <div class="tc-desc">Local Markdown knowledge base with graph view. Perfect for personal runbooks, incident logs, and architecture notes. Files stored locally — no vendor lock-in.</div>
+      <div class="tc-badges">
+        <span class="tcb tcb-pu">Knowledge Graph</span>
+        <span class="tcb tcb-bl">Local-first</span>
+        <span class="tcb tcb-gr">Plugins</span>
+      </div>
+    </div>
+    <div class="tool-card tc-cy">
+      <div class="tc-top"><span class="tc-emoji">📖</span><div><div class="tc-name">Wiki.js</div><span class="tc-free">Open Source</span></div></div>
+      <div class="tc-desc">Self-hosted wiki with a beautiful modern UI. Supports Git sync, Markdown, database storage. Great for team wikis on private infrastructure.</div>
+      <div class="tc-badges">
+        <span class="tcb tcb-cy">Self-hosted</span>
+        <span class="tcb tcb-bl">Git sync</span>
+        <span class="tcb tcb-am">Docker</span>
+      </div>
+    </div>
+  </div>
+
+  <h3>🥈 Tier 2 — Collaboration-first (Cloud)</h3>
+  <div class="tool-grid">
+    <div class="tool-card tc-am">
+      <div class="tc-top"><span class="tc-emoji">📝</span><div><div class="tc-name">Notion</div><span class="tc-free">FREE Team</span></div></div>
+      <div class="tc-desc">Great for runbooks, on-call docs, and team wikis. Free tier is generous. No Git integration but excellent for non-technical stakeholder docs.</div>
+      <div class="tc-badges"><span class="tcb tcb-am">Collaborative</span><span class="tcb tcb-gr">Templates</span></div>
+    </div>
+    <div class="tool-card tc-bl">
+      <div class="tc-top"><span class="tc-emoji">📋</span><div><div class="tc-name">Confluence</div><span class="tc-free">FREE 10 users</span></div></div>
+      <div class="tc-desc">Atlassian's team wiki. Free for up to 10 users. Strong Jira integration for incident-to-doc linking. Enterprise choice for Jira shops.</div>
+      <div class="tc-badges"><span class="tcb tcb-bl">Jira integration</span><span class="tcb tcb-pu">Templates</span></div>
+    </div>
+    <div class="tool-card tc-ro">
+      <div class="tc-top"><span class="tc-emoji">📚</span><div><div class="tc-name">GitBook</div><span class="tc-free">FREE Public</span></div></div>
+      <div class="tc-desc">Beautiful hosted docs with GitHub sync. Free for public repos. Great for public-facing API docs and team handbooks.</div>
+      <div class="tc-badges"><span class="tcb tcb-bl">GitHub sync</span><span class="tcb tcb-gr">Beautiful UI</span></div>
+    </div>
+    <div class="tool-card tc-pu">
+      <div class="tc-top"><span class="tc-emoji">🕸️</span><div><div class="tc-name">BookStack</div><span class="tc-free">Open Source</span></div></div>
+      <div class="tc-desc">Self-hosted, organized into Books → Chapters → Pages. Excellent structure for DevOps runbooks and SOP documentation.</div>
+      <div class="tc-badges"><span class="tcb tcb-cy">Self-hosted</span><span class="tcb tcb-am">Organized</span></div>
+    </div>
+  </div>
+
+  <h3>🥉 Tier 3 — Lightweight / Specialized</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Tool</th><th>Best For</th><th>Format</th><th>Hosting</th><th>Git Native</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Sphinx</strong></td><td>Python projects, API docs</td><td>reStructuredText / MD</td><td>Read the Docs FREE</td><td>✅ Yes</td></tr>
+      <tr><td><strong>Hugo</strong></td><td>Fast static sites</td><td>Markdown</td><td>GitHub Pages / Netlify</td><td>✅ Yes</td></tr>
+      <tr><td><strong>Docsify</strong></td><td>Quick single-page docs</td><td>Markdown</td><td>GitHub Pages</td><td>✅ Yes</td></tr>
+      <tr><td><strong>GitHub Wiki</strong></td><td>Quick repo docs</td><td>Markdown</td><td>GitHub (built-in)</td><td>✅ Yes</td></tr>
+      <tr><td><strong>HedgeDoc</strong></td><td>Real-time collaborative MD</td><td>Markdown</td><td>Self-hosted</td><td>⚠️ Partial</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout callout-bl">
+    <h4>💡 DevOps Engineer Recommendation</h4>
+    <p><strong>For a full DevOps documentation site:</strong> Use <strong>MkDocs + Material Theme + GitHub Pages</strong>. Your docs live alongside your code, get reviewed like code (PRs), deploy automatically on merge, and the search + navigation is world-class. Zero cost, full control.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 2: WHY MKDOCS
+══════════════════════════════════════════ -->
+<div id="why" class="sec">
+  <div class="sec-hdr">
+    <div class="sec-icon si-cy">🎯</div>
+    <div class="sec-hdr-text">
+      <h2>Why MkDocs for DevOps Documentation?</h2>
+      <p>Comparison, architecture, and real-world DevOps use cases</p>
+    </div>
+  </div>
+
+  <h3>Feature Comparison</h3>
+  <div class="compare-grid">
+    <div class="cmp-card">
+      <div class="cmp-title" style="color:var(--blue)">📘 MkDocs Material</div>
+      <div class="cmp-stars">★★★★★</div>
+      <ul class="cmp-list">
+        <li>Git-native Markdown</li>
+        <li>GitHub Pages (FREE)</li>
+        <li>Full-text search</li>
+        <li>Dark/light mode</li>
+        <li>Mobile responsive</li>
+        <li>Mermaid diagrams</li>
+        <li>Code copy buttons</li>
+        <li class="no">No real-time collab</li>
+      </ul>
+    </div>
+    <div class="cmp-card">
+      <div class="cmp-title" style="color:var(--amber)">📝 Notion</div>
+      <div class="cmp-stars">★★★★☆</div>
+      <ul class="cmp-list">
+        <li>Real-time collab</li>
+        <li>Easy for non-devs</li>
+        <li>Database views</li>
+        <li class="no">No Git versioning</li>
+        <li class="no">No code review flow</li>
+        <li class="no">Vendor lock-in</li>
+        <li class="no">Paid for teams</li>
+      </ul>
+    </div>
+    <div class="cmp-card">
+      <div class="cmp-title" style="color:var(--purple)">🦕 Docusaurus</div>
+      <div class="cmp-stars">★★★★☆</div>
+      <ul class="cmp-list">
+        <li>Git-native</li>
+        <li>Versioned docs</li>
+        <li>Blog support</li>
+        <li>React components</li>
+        <li class="no">Heavier setup</li>
+        <li class="no">Requires Node.js</li>
+      </ul>
+    </div>
+    <div class="cmp-card">
+      <div class="cmp-title" style="color:var(--cyan)">📋 Confluence</div>
+      <div class="cmp-stars">★★★☆☆</div>
+      <ul class="cmp-list">
+        <li>Jira integration</li>
+        <li>10 users free</li>
+        <li>Templates</li>
+        <li class="no">Complex UI</li>
+        <li class="no">Expensive at scale</li>
+        <li class="no">Not Git-native</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>MkDocs Architecture Flow</h3>
+  <div class="workflow">
+    <div class="wf-node"><span class="wf-emoji">✍️</span><div class="wf-label">Write Docs</div><div class="wf-sub">.md files</div></div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-node"><span class="wf-emoji">🔧</span><div class="wf-label">mkdocs.yml</div><div class="wf-sub">nav + config</div></div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-node"><span class="wf-emoji">🏗️</span><div class="wf-label">mkdocs build</div><div class="wf-sub">static HTML</div></div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-node"><span class="wf-emoji">📤</span><div class="wf-label">git push</div><div class="wf-sub">main branch</div></div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-node"><span class="wf-emoji">⚡</span><div class="wf-label">GitHub Action</div><div class="wf-sub">auto-deploy</div></div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-node"><span class="wf-emoji">🌐</span><div class="wf-label">GitHub Pages</div><div class="wf-sub">docs.xyz.com</div></div>
+  </div>
+
+  <h3>What to Document as a DevOps Engineer</h3>
+  <div class="two-col">
+    <div class="callout callout-bl">
+      <h4>🚀 Deployment Docs</h4>
+      <ul>
+        <li>Deployment runbooks (Nginx, Docker, K8s)</li>
+        <li>Release procedures & checklists</li>
+        <li>Rollback procedures</li>
+        <li>Environment variables reference</li>
+        <li>CI/CD pipeline documentation</li>
+      </ul>
+    </div>
+    <div class="callout callout-gr">
+      <h4>🔥 Incident Management</h4>
+      <ul>
+        <li>Incident response playbooks</li>
+        <li>Post-mortem templates & archives</li>
+        <li>On-call runbooks</li>
+        <li>Escalation paths</li>
+        <li>Alert definitions & thresholds</li>
+      </ul>
+    </div>
+    <div class="callout callout-am">
+      <h4>🏗️ Infrastructure Docs</h4>
+      <ul>
+        <li>Server inventory & architecture</li>
+        <li>Network topology diagrams</li>
+        <li>Terraform module docs</li>
+        <li>Kubernetes cluster info</li>
+        <li>Database schemas & backups</li>
+      </ul>
+    </div>
+    <div class="callout callout-pu">
+      <h4>⚙️ Operations SOPs</h4>
+      <ul>
+        <li>Onboarding guides</li>
+        <li>Tool setup guides (kubectl, AWS CLI)</li>
+        <li>Monitoring & alerting docs</li>
+        <li>Certificate renewal procedures</li>
+        <li>Security hardening checklists</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 3: INSTALLATION
+══════════════════════════════════════════ -->
+<div id="install" class="sec">
+  <div class="sec-hdr">
+    <div class="sec-icon si-gr">⚙️</div>
+    <div class="sec-hdr-text">
+      <h2>MkDocs Installation — Step by Step</h2>
+      <p>From zero to running local docs server in under 10 minutes</p>
+    </div>
+  </div>
+
+  <h3>Step 1 — Install Python & pip</h3>
+  <div class="code-wrap">
+    <div class="code-top"><div style="display:flex;align-items:center;gap:10px;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-fname">Terminal · Ubuntu/Debian</span></div><span class="code-badge cb-sh">BASH</span></div>
+    <pre><span class="cm"># Verify Python version (3.8+ required)</span>
+<span class="cmd">python3 --version</span>
+<span class="t-out"># Python 3.11.6</span>
+
+<span class="cm"># Install pip if not present</span>
+<span class="cmd">sudo apt update && sudo apt install python3-pip python3-venv -y</span>
+
+<span class="cm"># Verify pip</span>
+<span class="cmd">pip3 --version</span>
+<span class="t-out"># pip 23.2 from /usr/local/lib/python3.11/dist-packages/pip (python 3.11)</span></pre>
+  </div>
+
+  <h3>Step 2 — Create Virtual Environment (Best Practice)</h3>
+  <div class="code-wrap">
+    <div class="code-top"><div style="display:flex;align-items:center;gap:10px;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-fname">Project Setup</span></div><span class="code-badge cb-sh">BASH</span></div>
+    <pre><span class="cm"># Create project directory</span>
+<span class="cmd">mkdir xyz-devops-docs && cd xyz-devops-docs</span>
+
+<span class="cm"># Create virtual environment</span>
+<span class="cmd">python3 -m venv .venv</span>
+
+<span class="cm"># Activate it</span>
+<span class="cmd">source .venv/bin/activate</span>     <span class="cm"># Linux/macOS</span>
+<span class="cm"># .venv\Scripts\activate      # Windows PowerShell</span>
+
+<span class="cm"># Your prompt now shows: (.venv)</span>
+<span class="t-ok">(.venv) user@server:~/xyz-devops-docs$</span></pre>
+  </div>
+
+  <h3>Step 3 — Install MkDocs + Material Theme + Plugins</h3>
+  <div class="code-wrap">
+    <div class="code-top"><div style="display:flex;align-items:center;gap:10px;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-fname">requirements.txt approach</span></div><span class="code-badge cb-sh">BASH</span></div>
+    <pre><span class="cm"># Install all at once (recommended)</span>
+<span class="cmd">pip install \
+  mkdocs \
+  mkdocs-material \
+  mkdocs-git-revision-date-localized-plugin \
+  mkdocs-minify-plugin \
+  mkdocs-awesome-pages-plugin \
+  mkdocstrings \
+  pymdown-extensions</span>
+
+<span class="cm"># Save dependencies to requirements file</span>
+<span class="cmd">pip freeze > requirements.txt</span>
+
+<span class="cm"># Verify installation</span>
+<span class="cmd">mkdocs --version</span>
+<span class="t-ok">mkdocs, version 1.5.3 from /home/user/xyz-devops-docs/.venv/lib/python3.11/site-packages/mkdocs (Python 3.11)</span></pre>
+  </div>
+
+  <h3>Step 4 — Initialize MkDocs Project</h3>
+  <div class="code-wrap">
+    <div class="code-top"><div style="display:flex;align-items:center;gap:10px;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-fname">Project Init</span></div><span class="code-badge cb-sh">BASH</span></div>
+    <pre><span class="cm"># Option A: Fresh init (creates mkdocs.yml + docs/index.md)</span>
+<span class="cmd">mkdocs new .</span>
+
+<span class="t-ok">INFO    -  Writing config file: ./mkdocs.yml</span>
+<span class="t-ok">INFO    -  Writing initial docs: ./docs/index.md</span>
+
+<span class="cm"># Option B: Init into a subfolder</span>
+<span class="cmd">mkdocs new my-docs</span>
+
+<span class="cm"># Start local dev server with live reload</span>
+<span class="cmd">mkdocs serve</span>
+
+<span class="t-ok">INFO    - Building documentation...</span>
+<span class="t-ok">INFO    - Cleaning site directory</span>
+<span class="t-ok">INFO    - Documentation built in 0.32 seconds</span>
+<span class="t-ok">INFO    - [13:45:22] Watching paths for changes: 'docs', 'mkdocs.yml'</span>
+<span class="t-ok">INFO    - [13:45:22] Serving on http://127.0.0.1:8000/</span></pre>
+  </div>
+
+  <div class="alert al-good"><div class="alert-ico">✅</div><div>Open <strong>http://127.0.0.1:8000</strong> in your browser. Every time you save a Markdown file, the page auto-reloads.</div></div>
+
+  <h3>Plugin Reference</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Plugin</th><th>Install Command</th><th>What It Does</th></tr></thead>
+    <tbody>
+      <tr><td><code>mkdocs-material</code></td><td><code>pip install mkdocs-material</code></td><td>Best-in-class Material Design theme</td></tr>
+      <tr><td><code>git-revision-date-localized</code></td><td><code>pip install mkdocs-git-revision-date-localized-plugin</code></td><td>Shows "Last updated: 2 days ago" on pages</td></tr>
+      <tr><td><code>mkdocs-minify-plugin</code></td><td><code>pip install mkdocs-minify-plugin</code></td><td>Minifies HTML/JS/CSS output</td></tr>
+      <tr><td><code>mkdocs-awesome-pages-plugin</code></td><td><code>pip install mkdocs-awesome-pages-plugin</code></td><td>Auto-generate nav from folder structure</td></tr>
+      <tr><td><code>pymdown-extensions</code></td><td><code>pip install pymdown-extensions</code></td><td>Admonitions, tabs, code blocks, diagrams</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 4: FOLDER STRUCTURE
+══════════════════════════════════════════ -->
+<div id="structure" class="sec">
+  <div class="sec-hdr">
+    <div class="sec-icon si-am">📁</div>
+    <div class="sec-hdr-text">
+      <h2>Complete Folder Structure for DevOps Docs</h2>
+      <p>Production-grade structure for XYZ organization documentation</p>
+    </div>
+  </div>
+
+  <h3>Full Project Tree</h3>
+  <div class="tree">
+<span class="t-dir">xyz-devops-docs/</span>                       <span class="t-note">← Root of your Git repo</span>
+├── <span class="t-yaml">mkdocs.yml</span>                            <span class="t-note">← Main config file</span>
+├── <span class="t-py">requirements.txt</span>                      <span class="t-note">← pip dependencies</span>
+├── <span class="t-dot">.gitignore</span>                            <span class="t-note">← ignore site/, .venv/</span>
+├── <span class="t-dot">.github/</span>
+│   └── <span class="t-dir">workflows/</span>
+│       └── <span class="t-sh">deploy.yml</span>                    <span class="t-note">← GitHub Actions CI/CD</span>
+│
+└── <span class="t-dir">docs/</span>                                  <span class="t-note">← All your documentation</span>
+    ├── <span class="t-md">index.md</span>                          <span class="t-note">← Home page</span>
+    ├── <span class="t-dir">overrides/</span>                         <span class="t-note">← Custom theme overrides</span>
+    │   └── <span class="t-file">main.html</span>
+    │
+    ├── <span class="t-dir">assets/</span>
+    │   ├── <span class="t-dir">images/</span>                        <span class="t-note">← Architecture diagrams</span>
+    │   ├── <span class="t-dir">stylesheets/</span>
+    │   │   └── <span class="t-file">extra.css</span>               <span class="t-note">← Custom CSS</span>
+    │   └── <span class="t-dir">scripts/</span>
+    │       └── <span class="t-file">extra.js</span>                <span class="t-note">← Custom JS</span>
+    │
+    ├── <span class="t-dir">01-getting-started/</span>
+    │   ├── <span class="t-md">index.md</span>                       <span class="t-note">← Section intro</span>
+    │   ├── <span class="t-md">onboarding.md</span>                 <span class="t-note">← New engineer guide</span>
+    │   ├── <span class="t-md">tools-setup.md</span>                <span class="t-note">← kubectl, AWS CLI, etc.</span>
+    │   └── <span class="t-md">access-management.md</span>
+    │
+    ├── <span class="t-dir">02-infrastructure/</span>
+    │   ├── <span class="t-md">index.md</span>
+    │   ├── <span class="t-md">server-inventory.md</span>           <span class="t-note">← All servers + IPs + roles</span>
+    │   ├── <span class="t-md">network-topology.md</span>           <span class="t-note">← VPC, subnets, peering</span>
+    │   ├── <span class="t-md">docker-setup.md</span>
+    │   ├── <span class="t-md">kubernetes-cluster.md</span>
+    │   └── <span class="t-dir">terraform/</span>
+    │       ├── <span class="t-md">overview.md</span>
+    │       └── <span class="t-md">modules.md</span>
+    │
+    ├── <span class="t-dir">03-deployments/</span>
+    │   ├── <span class="t-md">index.md</span>
+    │   ├── <span class="t-md">deployment-checklist.md</span>
+    │   ├── <span class="t-md">nginx-deployment.md</span>
+    │   ├── <span class="t-md">docker-deployment.md</span>
+    │   ├── <span class="t-md">rollback-procedures.md</span>
+    │   └── <span class="t-md">env-variables-reference.md</span>
+    │
+    ├── <span class="t-dir">04-cicd/</span>
+    │   ├── <span class="t-md">index.md</span>
+    │   ├── <span class="t-md">github-actions-pipelines.md</span>
+    │   ├── <span class="t-md">jenkins-jobs.md</span>
+    │   └── <span class="t-md">release-process.md</span>
+    │
+    ├── <span class="t-dir">05-monitoring/</span>
+    │   ├── <span class="t-md">index.md</span>
+    │   ├── <span class="t-md">grafana-dashboards.md</span>
+    │   ├── <span class="t-md">prometheus-alerts.md</span>
+    │   └── <span class="t-md">log-management.md</span>
+    │
+    ├── <span class="t-dir">06-incident-management/</span>
+    │   ├── <span class="t-md">index.md</span>
+    │   ├── <span class="t-md">incident-response.md</span>       <span class="t-note">← P1/P2/P3 playbooks</span>
+    │   ├── <span class="t-md">on-call-runbook.md</span>
+    │   ├── <span class="t-md">escalation-matrix.md</span>
+    │   └── <span class="t-dir">post-mortems/</span>               <span class="t-note">← One file per incident</span>
+    │       ├── <span class="t-md">2025-01-15-db-outage.md</span>
+    │       └── <span class="t-md">template.md</span>
+    │
+    ├── <span class="t-dir">07-security/</span>
+    │   ├── <span class="t-md">index.md</span>
+    │   ├── <span class="t-md">ssl-certificate-management.md</span>
+    │   ├── <span class="t-md">secrets-management.md</span>
+    │   └── <span class="t-md">hardening-checklist.md</span>
+    │
+    ├── <span class="t-dir">08-runbooks/</span>
+    │   ├── <span class="t-md">index.md</span>
+    │   ├── <span class="t-md">restart-services.md</span>
+    │   ├── <span class="t-md">database-backup-restore.md</span>
+    │   ├── <span class="t-md">ssl-renewal.md</span>
+    │   └── <span class="t-md">disk-space-cleanup.md</span>
+    │
+    └── <span class="t-dir">09-changelog/</span>
+        ├── <span class="t-md">index.md</span>
+        └── <span class="t-md">CHANGELOG.md</span>               <span class="t-note">← All infra changes log</span>
+  </div>
+
+  <h3>.gitignore for MkDocs</h3>
+  <div class="code-wrap">
+    <div class="code-top"><div style="display:flex;align-items:center;gap:10px;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-fname">.gitignore</span></div><span class="code-badge cb-git">GIT</span></div>
+    <pre><span class="cm"># MkDocs generated output (never commit this)</span>
+<span class="val">site/</span>
+
+<span class="cm"># Python virtual environment</span>
+<span class="val">.venv/</span>
+<span class="val">venv/</span>
+<span class="val">__pycache__/</span>
+<span class="val">*.pyc</span>
+
+<span class="cm"># IDE</span>
+<span class="val">.vscode/</span>
+<span class="val">.idea/</span>
+<span class="val">*.swp</span>
+
+<span class="cm"># OS</span>
+<span class="val">.DS_Store</span>
+<span class="val">Thumbs.db</span></pre>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 5: CONFIGURATION
+══════════════════════════════════════════ -->
+<div id="config" class="sec">
+  <div class="sec-hdr">
+    <div class="sec-icon si-pu">🔧</div>
+    <div class="sec-hdr-text">
+      <h2>mkdocs.yml — Complete Configuration</h2>
+      <p>Production-ready config for XYZ DevOps documentation site</p>
+    </div>
+  </div>
+
+  <div class="code-wrap">
+    <div class="code-top"><div style="display:flex;align-items:center;gap:10px;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-fname">mkdocs.yml · Full Production Config</span></div><span class="code-badge cb-yml">YAML</span></div>
+    <pre><span class="cm"># ──────────────────────────────────────────────────────────────
+#  XYZ DevOps Documentation · mkdocs.yml
+# ──────────────────────────────────────────────────────────────</span>
+
+<span class="hdr">site_name:</span>        <span class="str">XYZ DevOps Documentation</span>
+<span class="hdr">site_url:</span>         <span class="str">https://xyz-org.github.io/devops-docs</span>
+<span class="hdr">site_description:</span> <span class="str">Deployment runbooks, infrastructure docs, incident playbooks</span>
+<span class="hdr">site_author:</span>      <span class="str">XYZ DevOps Team</span>
+<span class="hdr">repo_url:</span>         <span class="str">https://github.com/xyz-org/devops-docs</span>
+<span class="hdr">repo_name:</span>        <span class="str">xyz-org/devops-docs</span>
+<span class="hdr">edit_uri:</span>         <span class="str">edit/main/docs/</span>        <span class="cm"># "Edit this page" link</span>
+<span class="hdr">docs_dir:</span>         <span class="str">docs</span>
+<span class="hdr">site_dir:</span>         <span class="str">site</span>
+
+<span class="cm"># ── Theme ──────────────────────────────────────────────────────</span>
+<span class="hdr">theme:</span>
+  <span class="hdr">name:</span>       <span class="str">material</span>
+  <span class="hdr">custom_dir:</span> <span class="str">docs/overrides</span>
+  <span class="hdr">language:</span>   <span class="str">en</span>
+  <span class="hdr">palette:</span>
+    <span class="cm"># Light mode</span>
+    - <span class="hdr">media:</span> <span class="str">"(prefers-color-scheme: light)"</span>
+      <span class="hdr">scheme:</span>  <span class="str">default</span>
+      <span class="hdr">primary:</span> <span class="str">indigo</span>
+      <span class="hdr">accent:</span>  <span class="str">blue</span>
+      <span class="hdr">toggle:</span>
+        <span class="hdr">icon:</span>  <span class="str">material/weather-night</span>
+        <span class="hdr">name:</span>  <span class="str">Switch to dark mode</span>
+    <span class="cm"># Dark mode</span>
+    - <span class="hdr">media:</span> <span class="str">"(prefers-color-scheme: dark)"</span>
+      <span class="hdr">scheme:</span>  <span class="str">slate</span>
+      <span class="hdr">primary:</span> <span class="str">indigo</span>
+      <span class="hdr">accent:</span>  <span class="str">light blue</span>
+      <span class="hdr">toggle:</span>
+        <span class="hdr">icon:</span>  <span class="str">material/weather-sunny</span>
+        <span class="hdr">name:</span>  <span class="str">Switch to light mode</span>
+  <span class="hdr">font:</span>
+    <span class="hdr">text:</span> <span class="str">Inter</span>
+    <span class="hdr">code:</span> <span class="str">JetBrains Mono</span>
+  <span class="hdr">icon:</span>
+    <span class="hdr">repo:</span>  <span class="str">fontawesome/brands/github</span>
+    <span class="hdr">logo:</span>  <span class="str">material/book-open-page-variant</span>
+  <span class="hdr">features:</span>
+    - <span class="str">navigation.instant</span>        <span class="cm"># SPA-style navigation</span>
+    - <span class="str">navigation.instant.prefetch</span>
+    - <span class="str">navigation.tabs</span>            <span class="cm"># Top-level tabs</span>
+    - <span class="str">navigation.tabs.sticky</span>
+    - <span class="str">navigation.sections</span>       <span class="cm"># Collapsible sections</span>
+    - <span class="str">navigation.expand</span>
+    - <span class="str">navigation.top</span>            <span class="cm"># "Back to top" button</span>
+    - <span class="str">navigation.tracking</span>       <span class="cm"># URL updated on scroll</span>
+    - <span class="str">search.highlight</span>
+    - <span class="str">search.suggest</span>
+    - <span class="str">search.share</span>
+    - <span class="str">content.code.copy</span>         <span class="cm"># Copy button on code blocks</span>
+    - <span class="str">content.code.annotate</span>
+    - <span class="str">content.tabs.link</span>
+    - <span class="str">toc.follow</span>
+    - <span class="str">toc.integrate</span>
+
+<span class="cm"># ── Plugins ────────────────────────────────────────────────────</span>
+<span class="hdr">plugins:</span>
+  - <span class="str">search:</span>
+      <span class="hdr">lang:</span> <span class="str">en</span>
+  - <span class="str">git-revision-date-localized:</span>  <span class="cm"># Last updated timestamp</span>
+      <span class="hdr">enable_creation_date:</span> <span class="val">true</span>
+      <span class="hdr">type:</span> <span class="str">timeago</span>
+  - <span class="str">minify:</span>
+      <span class="hdr">minify_html:</span> <span class="val">true</span>
+
+<span class="cm"># ── Markdown Extensions ────────────────────────────────────────</span>
+<span class="hdr">markdown_extensions:</span>
+  - <span class="str">admonition</span>                    <span class="cm"># !!! note, warning, danger</span>
+  - <span class="str">pymdownx.details</span>              <span class="cm"># Collapsible sections</span>
+  - <span class="str">pymdownx.superfences:</span>
+      <span class="hdr">custom_fences:</span>
+        - <span class="hdr">name:</span> <span class="str">mermaid</span>             <span class="cm"># Mermaid diagrams in code</span>
+          <span class="hdr">class:</span> <span class="str">mermaid</span>
+          <span class="hdr">format:</span> <span class="str">!!python/name:pymdownx.superfences.fence_code_format</span>
+  - <span class="str">pymdownx.tabbed:</span>              <span class="cm"># Tabbed content blocks</span>
+      <span class="hdr">alternate_style:</span> <span class="val">true</span>
+  - <span class="str">pymdownx.highlight:</span>
+      <span class="hdr">anchor_linenums:</span> <span class="val">true</span>
+      <span class="hdr">line_spans:</span> <span class="str">__span</span>
+  - <span class="str">pymdownx.inlinehilite</span>
+  - <span class="str">pymdownx.snippets</span>
+  - <span class="str">pymdownx.tasklist:</span>            <span class="cm"># - [x] checkboxes</span>
+      <span class="hdr">custom_checkbox:</span> <span class="val">true</span>
+  - <span class="str">pymdownx.emoji:</span>
+      <span class="hdr">emoji_index:</span>     <span class="str">!!python/name:material.extensions.emoji.twemoji</span>
+      <span class="hdr">emoji_generator:</span> <span class="str">!!python/name:material.extensions.emoji.to_svg</span>
+  - <span class="str">tables</span>
+  - <span class="str">toc:</span>
+      <span class="hdr">permalink:</span> <span class="val">true</span>              <span class="cm"># Anchor links on headings</span>
+      <span class="hdr">toc_depth:</span> <span class="num">3</span>
+  - <span class="str">attr_list</span>
+  - <span class="str">md_in_html</span>
+  - <span class="str">footnotes</span>
+  - <span class="str">def_list</span>
+
+<span class="cm"># ── Custom CSS/JS ──────────────────────────────────────────────</span>
+<span class="hdr">extra_css:</span>
+  - <span class="str">assets/stylesheets/extra.css</span>
+
+<span class="hdr">extra_javascript:</span>
+  - <span class="str">https://unpkg.com/mermaid@10/dist/mermaid.min.js</span>
+
+<span class="cm"># ── Extra Info ─────────────────────────────────────────────────</span>
+<span class="hdr">extra:</span>
+  <span class="hdr">social:</span>
+    - <span class="hdr">icon:</span> <span class="str">fontawesome/brands/github</span>
+      <span class="hdr">link:</span> <span class="str">https://github.com/xyz-org</span>
+    - <span class="hdr">icon:</span> <span class="str">fontawesome/brands/slack</span>
+      <span class="hdr">link:</span> <span class="str">https://xyz-org.slack.com</span>
+  <span class="hdr">version:</span>
+    <span class="hdr">provider:</span> <span class="str">mike</span>
+  <span class="hdr">analytics:</span>
+    <span class="hdr">provider:</span> <span class="str">google</span>
+    <span class="hdr">property:</span> <span class="str">G-XXXXXXXXXX</span>          <span class="cm"># Optional Google Analytics</span>
+  <span class="hdr">consent:</span>
+    <span class="hdr">title:</span> <span class="str">Cookie consent</span>
+    <span class="hdr">description:</span> <span class="str">We use cookies for analytics</span>
+
+<span class="cm"># ── Navigation ─────────────────────────────────────────────────</span>
+<span class="hdr">nav:</span>
+  - <span class="str">Home:</span> <span class="str">index.md</span>
+  - <span class="str">Getting Started:</span>
+    - <span class="str">Overview:</span>             <span class="str">01-getting-started/index.md</span>
+    - <span class="str">Onboarding Guide:</span>    <span class="str">01-getting-started/onboarding.md</span>
+    - <span class="str">Tools Setup:</span>         <span class="str">01-getting-started/tools-setup.md</span>
+    - <span class="str">Access Management:</span>   <span class="str">01-getting-started/access-management.md</span>
+  - <span class="str">Infrastructure:</span>
+    - <span class="str">Overview:</span>            <span class="str">02-infrastructure/index.md</span>
+    - <span class="str">Server Inventory:</span>   <span class="str">02-infrastructure/server-inventory.md</span>
+    - <span class="str">Network Topology:</span>   <span class="str">02-infrastructure/network-topology.md</span>
+    - <span class="str">Docker Setup:</span>       <span class="str">02-infrastructure/docker-setup.md</span>
+    - <span class="str">Kubernetes Cluster:</span> <span class="str">02-infrastructure/kubernetes-cluster.md</span>
+  - <span class="str">Deployments:</span>
+    - <span class="str">Overview:</span>            <span class="str">03-deployments/index.md</span>
+    - <span class="str">Deployment Checklist:</span><span class="str">03-deployments/deployment-checklist.md</span>
+    - <span class="str">Nginx Deployment:</span>   <span class="str">03-deployments/nginx-deployment.md</span>
+    - <span class="str">Rollback Procedures:</span><span class="str">03-deployments/rollback-procedures.md</span>
+  - <span class="str">Incident Management:</span>
+    - <span class="str">Overview:</span>            <span class="str">06-incident-management/index.md</span>
+    - <span class="str">Incident Response:</span>  <span class="str">06-incident-management/incident-response.md</span>
+    - <span class="str">On-Call Runbook:</span>    <span class="str">06-incident-management/on-call-runbook.md</span>
+    - <span class="str">Post-Mortems:</span>
+      - <span class="str">DB Outage 2025-01-15:</span> <span class="str">06-incident-management/post-mortems/2025-01-15-db-outage.md</span>
+  - <span class="str">Runbooks:</span>
+    - <span class="str">Overview:</span>            <span class="str">08-runbooks/index.md</span>
+    - <span class="str">Restart Services:</span>   <span class="str">08-runbooks/restart-services.md</span>
+    - <span class="str">Database Backup:</span>    <span class="str">08-runbooks/database-backup-restore.md</span>
+    - <span class="str">SSL Renewal:</span>        <span class="str">08-runbooks/ssl-renewal.md</span>
+  - <span class="str">Changelog:</span>           <span class="str">09-changelog/CHANGELOG.md</span>
+
+<span class="hdr">copyright:</span> <span class="str">&copy; 2025 XYZ Organization DevOps Team</span></pre>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 6: WRITING DOCS
+══════════════════════════════════════════ -->
+<div id="writing" class="sec">
+  <div class="sec-hdr">
+    <div class="sec-icon si-cy">✍️</div>
+    <div class="sec-hdr-text">
+      <h2>Writing Documentation — Templates & Best Practices</h2>
+      <p>MkDocs Markdown features and real DevOps doc templates</p>
+    </div>
+  </div>
+
+  <h3>Runbook Template</h3>
+  <div class="code-wrap">
+    <div class="code-top"><div style="display:flex;align-items:center;gap:10px;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-fname">docs/08-runbooks/ssl-renewal.md</span></div><span class="code-badge cb-md">MARKDOWN</span></div>
+    <pre><span class="cm"># SSL Certificate Renewal Runbook</span>
+
+<span class="val">!!! info "Overview"</span>
+    <span class="str">**Purpose:** Renew GoDaddy SSL certificate on production Nginx</span>
+    <span class="str">**Frequency:** Annually (30 days before expiry)</span>
+    <span class="str">**Owner:** DevOps Team | **Downtime:** None (zero-downtime reload)</span>
+
+<span class="val">## Pre-requisites</span>
+
+<span class="hdr">- [x]</span> Access to GoDaddy dashboard
+<span class="hdr">- [x]</span> SSH access to production server
+<span class="hdr">- [x]</span> Sudo privileges on server
+<span class="hdr">- [ ]</span> (Leave unchecked — do at runtime)
+
+<span class="val">## Step 1: Check Current Expiry</span>
+
+<span class="val">```bash</span>
+<span class="cmd">echo | openssl s_client -connect yourdomain.com:443 2>/dev/null \
+  | openssl x509 -noout -dates</span>
+<span class="val">```</span>
+
+<span class="val">!!! warning "Alert Threshold"</span>
+    If **days remaining &lt; 30**, proceed immediately with renewal.
+
+<span class="val">## Step 2: Generate New CSR</span>
+
+<span class="val">```bash title="Generate CSR (reuse existing key)"</span>
+<span class="cmd">sudo openssl req -new \
+  -key /etc/ssl/godaddy/yourdomain.key \
+  -out /etc/ssl/godaddy/renewal.csr</span>
+<span class="val">```</span>
+
+<span class="val">## Architecture Diagram</span>
+
+<span class="val">```mermaid</span>
+<span class="fn">sequenceDiagram</span>
+    participant DevOps
+    participant GoDaddy
+    participant Server
+    DevOps->>GoDaddy: Submit CSR
+    GoDaddy-->>DevOps: New certificate
+    DevOps->>Server: Upload + combine cert
+    Server-->>DevOps: nginx reload success
+<span class="val">```</span>
+
+<span class="val">## Validation Checklist</span>
+
+<span class="val">| Check | Command | Expected |</span>
+<span class="val">|-------|---------|----------|</span>
+<span class="val">| Cert expiry | `openssl ... -dates` | New date 1y+ |</span>
+<span class="val">| Nginx syntax | `nginx -t` | syntax ok |</span>
+<span class="val">| HTTPS works | `curl -I https://domain` | 200 OK |</span>
+
+<span class="val">!!! success "Completion"</span>
+    Certificate successfully renewed. Update the expiry date in
+    [Server Inventory](../02-infrastructure/server-inventory.md).</pre>
+  </div>
+
+  <h3>Key MkDocs Material Features</h3>
+  <div class="two-col">
+    <div class="code-wrap">
+      <div class="code-top"><div style="display:flex;align-items:center;gap:10px;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-fname">Admonitions (callout boxes)</span></div><span class="code-badge cb-md">MD</span></div>
+      <pre><span class="val">!!! note "Note title"</span>
+    Regular info box
+
+<span class="val">!!! warning</span>
+    Warning — be careful!
+
+<span class="val">!!! danger "Critical"</span>
+    Production-breaking change
+
+<span class="val">!!! tip "Pro tip"</span>
+    Helpful hint for team
+
+<span class="val">??? info "Collapsible section"</span>
+    Hidden by default, click to expand</pre>
+    </div>
+    <div class="code-wrap">
+      <div class="code-top"><div style="display:flex;align-items:center;gap:10px;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-fname">Code blocks with features</span></div><span class="code-badge cb-md">MD</span></div>
+      <pre><span class="val">```bash title="Deploy command" linenums="1"</span>
+docker compose up -d --build
+<span class="val">```</span>
+
+<span class="cm"># Tabs</span>
+<span class="val">=== "Ubuntu"</span>
+    sudo apt install nginx
+
+<span class="val">=== "CentOS"</span>
+    sudo yum install nginx
+
+<span class="cm"># Task lists</span>
+<span class="hdr">- [x]</span> Step completed
+<span class="hdr">- [ ]</span> Step pending</pre>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 7: GITHUB PAGES
+══════════════════════════════════════════ -->
+<div id="github" class="sec">
+  <div class="sec-hdr">
+    <div class="sec-icon si-gr">🚀</div>
+    <div class="sec-hdr-text">
+      <h2>Hosting on GitHub Pages — Step by Step</h2>
+      <p>From local docs to live public URL at org.github.io/devops-docs</p>
+    </div>
+  </div>
+
+  <h3>Step 1 — Create GitHub Repository</h3>
+  <div class="code-wrap">
+    <div class="code-top"><div style="display:flex;align-items:center;gap:10px;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-fname">Initialize Git & Push</span></div><span class="code-badge cb-sh">BASH</span></div>
+    <pre><span class="cm"># In your xyz-devops-docs/ folder</span>
+<span class="cmd">git init</span>
+<span class="cmd">git add .</span>
+<span class="cmd">git commit -m "feat: initial devops documentation setup"</span>
+
+<span class="cm"># Create repo on GitHub (via CLI or website)</span>
+<span class="cmd">gh repo create xyz-org/devops-docs --public --description "XYZ DevOps Documentation"</span>
+
+<span class="cm"># Push to GitHub</span>
+<span class="cmd">git remote add origin https://github.com/xyz-org/devops-docs.git</span>
+<span class="cmd">git branch -M main</span>
+<span class="cmd">git push -u origin main</span>
+
+<span class="t-ok">Enumerating objects: 45, done.
+Counting objects: 100% (45/45), done.
+Writing objects: 100% (45/45), 12.4 KiB | 6.21 MiB/s, done.
+To https://github.com/xyz-org/devops-docs.git
+ * [new branch]      main -> main</span></pre>
+  </div>
+
+  <h3>Step 2 — Enable GitHub Pages</h3>
+  <div class="steps-list">
+    <div class="step"><div class="sn sn-b">1</div><div class="sc"><h4>Go to Repository Settings</h4><p>GitHub repo → Settings tab → Pages (left sidebar)</p></div></div>
+    <div class="step"><div class="sn sn-b">2</div><div class="sc"><h4>Set Source to GitHub Actions</h4><p>Under "Build and deployment" → Source → select <strong>"GitHub Actions"</strong> (not Branch)</p></div></div>
+    <div class="step"><div class="sn sn-b">3</div><div class="sc"><h4>Your URL will be</h4><p><code>https://xyz-org.github.io/devops-docs</code> (or custom domain)</p></div></div>
+  </div>
+
+  <h3>Step 3 — Manual Deploy (First Time Test)</h3>
+  <div class="code-wrap">
+    <div class="code-top"><div style="display:flex;align-items:center;gap:10px;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-fname">Manual deploy via mkdocs gh-deploy</span></div><span class="code-badge cb-sh">BASH</span></div>
+    <pre><span class="cm"># Build docs + push to gh-pages branch in one command</span>
+<span class="cmd">mkdocs gh-deploy --clean --message "docs: deploy from main"</span>
+
+<span class="t-ok">INFO    - Cleaning site directory
+INFO    - Building documentation to directory: /tmp/mkdocs_...
+INFO    - Documentation built in 1.24 seconds
+INFO    - Copying '/tmp/mkdocs_.../.' to 'gh-pages' branch
+INFO    - Your documentation should shortly be available at:
+         https://xyz-org.github.io/devops-docs/</span>
+
+<span class="cm"># Verify gh-pages branch was created</span>
+<span class="cmd">git branch -a | grep gh-pages</span>
+<span class="t-ok">  remotes/origin/gh-pages</span></pre>
+  </div>
+
+  <h3>Step 4 — Custom Domain (Optional)</h3>
+  <div class="code-wrap">
+    <div class="code-top"><div style="display:flex;align-items:center;gap:10px;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-fname">Custom domain: docs.xyz.com</span></div><span class="code-badge cb-sh">BASH</span></div>
+    <pre><span class="cm"># 1. Add CNAME file to docs/ folder</span>
+<span class="cmd">echo "docs.xyz.com" > docs/CNAME</span>
+<span class="cmd">git add docs/CNAME && git commit -m "feat: add custom domain CNAME"</span>
+
+<span class="cm"># 2. In GoDaddy DNS — add CNAME record:</span>
+<span class="cm"># docs.xyz.com → xyz-org.github.io (CNAME)</span>
+
+<span class="cm"># 3. In GitHub Settings → Pages → Custom domain:</span>
+<span class="cm"># Enter: docs.xyz.com   ✅  Enforce HTTPS</span>
+
+<span class="cm"># 4. In mkdocs.yml update site_url:</span>
+<span class="cm"># site_url: https://docs.xyz.com</span></pre>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 8: CI/CD PIPELINE
+══════════════════════════════════════════ -->
+<div id="cicd" class="sec">
+  <div class="sec-hdr">
+    <div class="sec-icon si-am">⚡</div>
+    <div class="sec-hdr-text">
+      <h2>GitHub Actions CI/CD Pipeline</h2>
+      <p>Auto-deploy on every push to main — zero-touch documentation deployment</p>
+    </div>
+  </div>
+
+  <h3>Full Workflow File</h3>
+  <div class="code-wrap">
+    <div class="code-top"><div style="display:flex;align-items:center;gap:10px;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-fname">.github/workflows/deploy.yml</span></div><span class="code-badge cb-yml">YAML</span></div>
+    <pre><span class="kw">name:</span> <span class="str">Deploy MkDocs to GitHub Pages</span>
+
+<span class="kw">on:</span>
+  <span class="kw">push:</span>
+    <span class="kw">branches:</span>
+      - <span class="str">main</span>                  <span class="cm"># Trigger on push to main</span>
+  <span class="kw">pull_request:</span>
+    <span class="kw">branches:</span>
+      - <span class="str">main</span>                  <span class="cm"># Build check on PRs (no deploy)</span>
+  <span class="kw">workflow_dispatch:</span>         <span class="cm"># Allow manual trigger from GitHub UI</span>
+
+<span class="cm"># Allow only one concurrent deployment</span>
+<span class="kw">concurrency:</span>
+  <span class="kw">group:</span> <span class="str">"pages"</span>
+  <span class="kw">cancel-in-progress:</span> <span class="val">true</span>
+
+<span class="kw">permissions:</span>
+  <span class="kw">contents:</span>  <span class="str">write</span>            <span class="cm"># Push to gh-pages branch</span>
+  <span class="kw">pages:</span>     <span class="str">write</span>
+  <span class="kw">id-token:</span>  <span class="str">write</span>
+
+<span class="kw">jobs:</span>
+
+  <span class="cm"># ── Job 1: Build & Validate ─────────────────────────────────</span>
+  <span class="fn">build:</span>
+    <span class="kw">runs-on:</span> <span class="str">ubuntu-latest</span>
+    <span class="kw">steps:</span>
+
+      - <span class="kw">name:</span> <span class="str">Checkout repository</span>
+        <span class="kw">uses:</span> <span class="str">actions/checkout@v4</span>
+        <span class="kw">with:</span>
+          <span class="kw">fetch-depth:</span> <span class="num">0</span>        <span class="cm"># Full history for git-revision dates</span>
+
+      - <span class="kw">name:</span> <span class="str">Set up Python 3.11</span>
+        <span class="kw">uses:</span> <span class="str">actions/setup-python@v5</span>
+        <span class="kw">with:</span>
+          <span class="kw">python-version:</span> <span class="str">"3.11"</span>
+          <span class="kw">cache:</span>          <span class="str">"pip"</span>   <span class="cm"># Cache pip packages</span>
+
+      - <span class="kw">name:</span> <span class="str">Install MkDocs + plugins</span>
+        <span class="kw">run:</span> <span class="str">pip install -r requirements.txt</span>
+
+      - <span class="kw">name:</span> <span class="str">Build docs (validate)</span>
+        <span class="kw">run:</span> <span class="str">mkdocs build --strict --verbose</span>
+        <span class="cm"># --strict: treat warnings as errors</span>
+        <span class="cm"># Catches broken links, missing pages</span>
+
+      - <span class="kw">name:</span> <span class="str">Upload artifact</span>
+        <span class="kw">uses:</span> <span class="str">actions/upload-pages-artifact@v3</span>
+        <span class="kw">with:</span>
+          <span class="kw">path:</span> <span class="str">site/</span>
+
+  <span class="cm"># ── Job 2: Deploy (only on push to main) ───────────────────</span>
+  <span class="fn">deploy:</span>
+    <span class="kw">needs:</span> <span class="str">build</span>
+    <span class="kw">runs-on:</span> <span class="str">ubuntu-latest</span>
+    <span class="kw">if:</span> <span class="str">github.event_name == 'push' && github.ref == 'refs/heads/main'</span>
+    <span class="kw">environment:</span>
+      <span class="kw">name:</span> <span class="str">github-pages</span>
+      <span class="kw">url:</span>  <span class="str">${{ steps.deployment.outputs.page_url }}</span>
+    <span class="kw">steps:</span>
+
+      - <span class="kw">name:</span> <span class="str">Deploy to GitHub Pages</span>
+        <span class="kw">id:</span>   <span class="str">deployment</span>
+        <span class="kw">uses:</span> <span class="str">actions/deploy-pages@v4</span>
+
+      - <span class="kw">name:</span> <span class="str">Print live URL</span>
+        <span class="kw">run:</span>  <span class="str">echo "✅ Docs live at ${{ steps.deployment.outputs.page_url }}"</span></pre>
+  </div>
+
+  <div class="terminal">
+    <span class="t-label">✦ GitHub Actions Run Log (Success)</span>
+<span class="t-prompt">Checkout repository</span>
+<span class="t-out">  ✓ Checked out main branch (fetch-depth=0)</span>
+<span class="t-prompt">Set up Python 3.11</span>
+<span class="t-out">  ✓ Python 3.11.8 cached and ready</span>
+<span class="t-prompt">Install MkDocs + plugins</span>
+<span class="t-out">  ✓ mkdocs-1.5.3 mkdocs-material-9.5.18 installed (cached)</span>
+<span class="t-prompt">Build docs</span>
+<span class="t-out">  INFO - Building documentation...
+  INFO - Documentation built in 2.14 seconds</span>
+<span class="t-ok">  ✓ Build passed — 0 warnings, 0 errors</span>
+<span class="t-prompt">Deploy to GitHub Pages</span>
+<span class="t-ok">  ✅ Docs live at https://xyz-org.github.io/devops-docs/</span>
+<span class="t-out">  Total time: 48 seconds</span>
+  </div>
+
+  <h3>Branch Strategy for Docs</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Branch</th><th>Purpose</th><th>Auto-Deploy</th><th>Who Merges</th></tr></thead>
+    <tbody>
+      <tr><td><code>main</code></td><td>Published live docs</td><td>✅ Yes → GitHub Pages</td><td>Team lead / senior DevOps</td></tr>
+      <tr><td><code>docs/nginx-update</code></td><td>Feature/doc branch</td><td>❌ No (only builds)</td><td>Author creates PR</td></tr>
+      <tr><td><code>docs/incident-2025-01</code></td><td>Post-mortem write-up</td><td>❌ No</td><td>Incident owner</td></tr>
+      <tr><td><code>gh-pages</code></td><td>Generated HTML (auto)</td><td>N/A (auto-managed)</td><td>GitHub Actions only</td></tr>
+    </tbody>
+  </table></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SECTION 9: PRO TIPS
+══════════════════════════════════════════ -->
+<div id="tips" class="sec">
+  <div class="sec-hdr">
+    <div class="sec-icon si-ro">💡</div>
+    <div class="sec-hdr-text">
+      <h2>Pro Tips for DevOps Documentation</h2>
+      <p>Real-world patterns from production DevOps teams</p>
+    </div>
+  </div>
+
+  <h3>Documentation Workflow for the Team</h3>
+  <div class="workflow">
+    <div class="wf-node"><span class="wf-emoji">🔧</span><div class="wf-label">Make Change</div><div class="wf-sub">deploy/fix</div></div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-node"><span class="wf-emoji">✍️</span><div class="wf-label">Write/Update</div><div class="wf-sub">.md file</div></div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-node"><span class="wf-emoji">🌿</span><div class="wf-label">Create Branch</div><div class="wf-sub">docs/xxx</div></div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-node"><span class="wf-emoji">👁️</span><div class="wf-label">PR Review</div><div class="wf-sub">peer check</div></div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-node"><span class="wf-emoji">🔀</span><div class="wf-label">Merge Main</div><div class="wf-sub">approve</div></div>
+    <div class="wf-arrow">→</div>
+    <div class="wf-node"><span class="wf-emoji">🚀</span><div class="wf-label">Auto Deploy</div><div class="wf-sub">live in 1min</div></div>
+  </div>
+
+  <div class="two-col">
+    <div class="callout callout-bl">
+      <h4>📌 Naming Conventions</h4>
+      <ul>
+        <li>Prefix folders with numbers: <code>01-getting-started/</code></li>
+        <li>Kebab-case filenames: <code>ssl-renewal.md</code></li>
+        <li>Post-mortems: <code>YYYY-MM-DD-incident-name.md</code></li>
+        <li>Runbooks: imperative verb — <code>restart-nginx.md</code></li>
+        <li>Every folder must have <code>index.md</code></li>
+      </ul>
+    </div>
+    <div class="callout callout-gr">
+      <h4>🏷️ Doc Metadata (Front Matter)</h4>
+      <ul>
+        <li>Add <code>---</code> YAML front matter to every page</li>
+        <li>Include: title, description, author, date</li>
+        <li>Tags for searchability: <code>tags: [nginx, ssl, production]</code></li>
+        <li>Status badges: draft / review / stable</li>
+      </ul>
+    </div>
+    <div class="callout callout-am">
+      <h4>🔍 Make Docs Searchable</h4>
+      <ul>
+        <li>Use consistent terminology across all docs</li>
+        <li>Add tags to every page</li>
+        <li>Write descriptive H2/H3 headings</li>
+        <li>MkDocs Material search is built-in and full-text</li>
+      </ul>
+    </div>
+    <div class="callout callout-pu">
+      <h4>🔄 Keep Docs Fresh</h4>
+      <ul>
+        <li>Docs PR required for every infra change</li>
+        <li>Review docs quarterly in team sprint</li>
+        <li><code>git-revision-date</code> plugin shows last updated</li>
+        <li>Mark stale docs with <code>!!! warning "Needs review"</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Page Front Matter Template</h3>
+  <div class="code-wrap">
+    <div class="code-top"><div style="display:flex;align-items:center;gap:10px;"><div class="code-dots"><div class="cd cd-r"></div><div class="cd cd-y"></div><div class="cd cd-g"></div></div><span class="code-fname">Add to top of every .md page</span></div><span class="code-badge cb-md">MARKDOWN</span></div>
+    <pre><span class="hdr">---</span>
+<span class="hdr">title:</span>       <span class="str">SSL Certificate Renewal</span>
+<span class="hdr">description:</span> <span class="str">Step-by-step guide to renew GoDaddy SSL on production Nginx</span>
+<span class="hdr">author:</span>      <span class="str">Your Name</span>
+<span class="hdr">created:</span>     <span class="str">2025-01-15</span>
+<span class="hdr">status:</span>      <span class="str">stable</span>         <span class="cm"># draft | review | stable | deprecated</span>
+<span class="hdr">tags:</span>
+  - <span class="str">ssl</span>
+  - <span class="str">nginx</span>
+  - <span class="str">production</span>
+  - <span class="str">runbook</span>
+<span class="hdr">---</span></pre>
+  </div>
+
+  <h3>Quick Commands Cheatsheet</h3>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Task</th><th>Command</th></tr></thead>
+    <tbody>
+      <tr><td>Start local server</td><td><code>mkdocs serve</code></td></tr>
+      <tr><td>Start on custom port</td><td><code>mkdocs serve --dev-addr 0.0.0.0:8080</code></td></tr>
+      <tr><td>Build static site</td><td><code>mkdocs build</code></td></tr>
+      <tr><td>Build with strict checks</td><td><code>mkdocs build --strict</code></td></tr>
+      <tr><td>Deploy to GitHub Pages</td><td><code>mkdocs gh-deploy</code></td></tr>
+      <tr><td>Check version</td><td><code>mkdocs --version</code></td></tr>
+      <tr><td>Update all plugins</td><td><code>pip install --upgrade -r requirements.txt</code></td></tr>
+      <tr><td>Check broken links</td><td><code>mkdocs build --strict 2>&1 | grep WARNING</code></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="alert al-good"><div class="alert-ico">🏆</div><div><strong>Final Rule:</strong> The best documentation is the one that actually gets written and kept up-to-date. Keep it in Git, treat it like code, review it in PRs, and your whole team will thank you.</div></div>
+</div>
+
+</div><!-- /wrap -->
+<script>
+function show(id) {
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
